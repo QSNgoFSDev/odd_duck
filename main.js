@@ -12,10 +12,10 @@ function SourceDataItem(title, imgPath) {
     this.imgPath = imgPath
     this.clickRecord = 0
     this.displayRecord = 0
-}.
+}
 
 function DataImport(sourceDataInput) {
-    this.sourceDataInput = sourceDataInput  /* create a copy of data go through*/
+    this.sourceDataInput = sourceDataInput  /* create a copy of data go through - then to use as a flag in loop, to create new instances*/
 
     this.dataPool = []
 
@@ -28,10 +28,6 @@ function DataImport(sourceDataInput) {
         }
         console.log(sourceDataInput);
     }
-
-
-
-
 
     this.renderfunction = function () {
         let container = document.getElementById('img-container')
@@ -50,49 +46,20 @@ function DataImport(sourceDataInput) {
 
             indexCheck.push(randomIndex)
 
-            // indexCheck.push(randomIndex)
-            // for (let k= 0; k<indexCheck.length;k++){
-            //     let checker = indexCheck[k];
-            //     if(checker != randomIndex){
-            //         randomImg = this.dataPool[randomIndex];
-
-            //     }
-
-            // }
-
-
-
             let randomImg = this.dataPool[randomIndex];
             randomImg.displayRecord++
             randomImgString += `
                     <h4>${randomImg.title}</h4>
                     <img src="${randomImg.imgPath}" alt="${randomImg.title}<">
                     <p>${randomImg.displayRecord}</p>
-            
             `;
-
-
 
         }
         container.innerHTML = randomImgString
 
-
-
     }
 
-
-
-
-
-
-
-
-
     this.eventListent = function () {
-
-        //    for (let i=0;i<25;i++){
-        // let render = this.renderfunction
-
 
         let imgListen = document.querySelectorAll("#img-container img")
 
@@ -106,22 +73,46 @@ function DataImport(sourceDataInput) {
                     if (compareData.imgPath === imgListen[k].getAttribute("src")) {
                         clicked = compareData
                         clicked.clickRecord++;
-
-
+                        dataPresent.startNextRound();
                     }
+
                 }
-                console.log(clicked)
 
             }
             )
-
         }
-
-
-
 
     }
 
+}
+
+DataImport.prototype.showResult = function () {
+    this.dataPool.forEach(function (datadisplay) {
+
+
+    });
+
+}
+
+DataImport.prototype.endDisplayfuntion = function () {
+    let displayItem = document.getElementById("img-container")
+    displayItem.style.display = 'none';
+
+    let button = document.getElementById("result-button")
+    button.style.display = 'block';
+    this.showResult();
+
+}
+
+DataImport.prototype.startNextRound = function () {
+    let initialRound = 0;
+    const maxRounds = 25;
+    if (initialRound < maxRounds) {
+        initialRound++;
+        this.renderfunction();
+    } else {
+        this.endDisplayfuntion()
+    }
 }
 
 let dataPresent = new DataImport(sourceData)
