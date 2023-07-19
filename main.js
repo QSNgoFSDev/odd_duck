@@ -12,7 +12,7 @@ function SourceDataItem(title, imgPath) {
     this.imgPath = imgPath
     this.clickRecord = 0
     this.displayRecord = 0
-}
+}.
 
 function DataImport(sourceDataInput) {
     this.sourceDataInput = sourceDataInput  /* create a copy of data go through*/
@@ -29,7 +29,7 @@ function DataImport(sourceDataInput) {
         console.log(sourceDataInput);
     }
 
-    
+
 
 
 
@@ -38,14 +38,14 @@ function DataImport(sourceDataInput) {
         randomImgString = ''
         let indexCheck = [];
         let displayRecord = 0;
-    
+
 
         // 3 times random
         for (let i = 0; i < 3; i++) {
-            
 
-            do { 
-                randomIndex = Math.floor(Math.random() * this.dataPool.length); 
+
+            do {
+                randomIndex = Math.floor(Math.random() * this.dataPool.length);
             } while (indexCheck.includes(randomIndex));
 
             indexCheck.push(randomIndex)
@@ -60,7 +60,7 @@ function DataImport(sourceDataInput) {
 
             // }
 
-            
+
 
             let randomImg = this.dataPool[randomIndex];
             randomImg.displayRecord++
@@ -71,13 +71,13 @@ function DataImport(sourceDataInput) {
             
             `;
 
-        
-            
+
+
         }
         container.innerHTML = randomImgString
 
 
-    
+
     }
 
 
@@ -90,23 +90,23 @@ function DataImport(sourceDataInput) {
 
     this.eventListent = function () {
 
-    //    for (let i=0;i<25;i++){
+        //    for (let i=0;i<25;i++){
         // let render = this.renderfunction
-            
 
-           let imgListen = document.querySelectorAll("#img-container img")
 
-           for(let k =0; k<imgListen.length;k++){
+        let imgListen = document.querySelectorAll("#img-container img")
+
+        for (let k = 0; k < imgListen.length; k++) {
             let clicked = null;
-            
-            imgListen[k].addEventListener("click",()=>
-            {
 
-                for (let i = 0;i<this.dataPool.length;i++){
+            imgListen[k].addEventListener("click", () => {
+
+                for (let i = 0; i < this.dataPool.length; i++) {
                     let compareData = this.dataPool[i];
-                    if (compareData.imgPath === imgListen[k].getAttribute("src")){ clicked = compareData
-                    clicked.clickRecord++;
-                
+                    if (compareData.imgPath === imgListen[k].getAttribute("src")) {
+                        clicked = compareData
+                        clicked.clickRecord++;
+
 
                     }
                 }
@@ -114,14 +114,14 @@ function DataImport(sourceDataInput) {
 
             }
             )
-        
-           }
-            
-    
+
+        }
+
+
 
 
     }
-  
+
 }
 
 let dataPresent = new DataImport(sourceData)
