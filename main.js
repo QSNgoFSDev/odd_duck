@@ -12,6 +12,7 @@ function SourceDataItem(title, imgPath) {
     this.imgPath = imgPath
     this.clickRecord = 0
     this.displayRecord = 0
+
 }
 
 function DataImport(sourceDataInput) {
@@ -33,7 +34,7 @@ function DataImport(sourceDataInput) {
         let container = document.getElementById('img-container')
         randomImgString = ''
         let indexCheck = [];
-        let displayRecord = 0;
+
 
 
         // 3 times random
@@ -79,15 +80,23 @@ function DataImport(sourceDataInput) {
                 }
 
             }
-            )
+            );
         }
 
-    }
+    };
 
 }
 
 DataImport.prototype.showResult = function () {
-    this.dataPool.forEach(function (datadisplay) {
+    this.dataPool.forEach(function (dataDisplay) {
+
+        showResultdiv = document.getElementById("show-result");
+        showResultdiv.innerHTML = `
+        <ul>
+        <li>${dataDisplay.title} had ${dataDisplay.clickRecord} had been display for ${dataDisplay.displayRecord} and </li>
+        </ul>
+        
+        `
 
 
     });
@@ -104,9 +113,13 @@ DataImport.prototype.endDisplayfuntion = function () {
 
 }
 
+let initialRound = 0;
+const maxRounds = 25;
+
+
+
 DataImport.prototype.startNextRound = function () {
-    let initialRound = 0;
-    const maxRounds = 25;
+
     if (initialRound < maxRounds) {
         initialRound++;
         this.renderfunction();
