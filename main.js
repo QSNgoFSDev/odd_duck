@@ -21,9 +21,12 @@ function SourceDataItem(title, imgPath) {
 
 }
 
-function DataImport(sourceDataInput) {
+function ODDduckVoting(sourceDataInput) {
     this.sourceDataInput = sourceDataInput  /* create a copy of data go through - then to use as a flag in loop, to create new instances*/
     this.initialRound = 0;
+    this.maxRounds = 5;
+    this.numberOfTimesRandom = 3
+
 
     this.dataPool = [];
 
@@ -45,9 +48,9 @@ function DataImport(sourceDataInput) {
 
 
         // 3 times random
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < this.numberOfTimesRandom; i++) {
 
-
+            let randomIndex;
             do {
                 randomIndex = Math.floor(Math.random() * this.dataPool.length);
             } while (indexCheck.includes(randomIndex));
@@ -57,9 +60,14 @@ function DataImport(sourceDataInput) {
             let randomImg = this.dataPool[randomIndex];
             randomImg.displayRecord++
             randomImgString += `
+                    <div class='img-content'>
+                        <div class= 'img-content__child'>
+                            <img src="${randomImg.imgPath}" alt="${randomImg.title}">
+                        </div>
                     <h4>${randomImg.title}</h4>
-                    <img src="${randomImg.imgPath}" alt="${randomImg.title}<">
-                    <p>${randomImg.displayRecord}</p>
+                    <p> display ${randomImg.displayRecord} times </p>
+                    <p> have number of ${randomImg.clickRecord} vote</p>
+                    </div>
             `;
 
         }
@@ -98,10 +106,11 @@ function DataImport(sourceDataInput) {
 
 }
 
-DataImport.prototype.showResult = function () {
+ODDduckVoting.prototype.showResult = function () {
 
     let showResultdiv = document.getElementById("show-result");
-    let showResultItems = '';
+
+    showResultItems = ''
 
 
 
@@ -109,45 +118,62 @@ DataImport.prototype.showResult = function () {
 
         showResultItems +=
             `
-        <ul>
-        <li>${dataDisplay.title} had ${dataDisplay.clickRecord} had been display for ${dataDisplay.displayRecord} and </li>
-        </ul>
         
+       
+        <p>${dataDisplay.title} has ${dataDisplay.clickRecord}vote, and was seen ${dataDisplay.displayRecord} times </p>
+      
         `
 
 
 
     });
+
+
     showResultdiv.innerHTML = showResultItems
+
+
 
 }
 
-DataImport.prototype.endDisplayfuntion = function () {
+ODDduckVoting.prototype.endDisplay = function () {
     let displayItem = document.getElementById("img-container")
     displayItem.style.display = 'none';
 
     let button = document.getElementById("result-button")
-    button.style.display = 'block';
-    this.showResult();
+    button.style.display = 'block'
+
+    let resultdiv = document.getElementById('show-result')
+    resultdiv.style.display = 'block'
+
+
 
 }
 
+ODDduckVoting.prototype.buttonListener = function () {
+    let that = this
+    document.getElementById('result-button').addEventListener('click', function () {
+        that.showResult();
+    })
+}
 
-const maxRounds = 25;
 
 
-DataImport.prototype.startNextRound = function () {
 
-    if (this.initialRound < maxRounds) {
+
+ODDduckVoting.prototype.startNextRound = function () {
+
+    if (this.initialRound < this.maxRounds) {
         this.initialRound++;
         this.renderfunction();
         this.eventListent();
     } else {
-        this.endDisplayfuntion()
+        this.endDisplay();
+        this.buttonListener();
     }
 }
 
-let dataPresent = new DataImport(sourceData)
+let dataPresent = new ODDduckVoting(sourceData)
 dataPresent.getDataToItem()
 dataPresent.renderfunction()
 dataPresent.eventListent()
+dataPresent.buttonListener()

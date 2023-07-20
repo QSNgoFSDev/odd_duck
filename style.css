@@ -1,4 +1,53 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  margin: 0;
+}
+main {
+  width: 1500px;
+}
 
+#img-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.img-content {
+  width: 350px;
+  height: 380px;
+  border: 2px solid blueviolet;
+  
+  border-radius: 3%;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.img-content__child{
+  max-width: 250px;
+  max-height: 250px;
+
+
+
+}
+
+
+img {
+
+
+ max-width: 100%;
+ height: 200px;
+ object-fit: contain;
+ 
+ 
+}
 
 
 #result-button {
@@ -8,3 +57,5 @@ display: none;
 #show-result {
   display: none;
 }
+
+
