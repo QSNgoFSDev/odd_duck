@@ -1,24 +1,31 @@
 let sourceData = [
-    { title: "bag", imgPath: "./img/bag.jpg" },
-    { title: "banana", imgPath: "./img/banana.jpg" },
-    { title: "bathroom", imgPath: "./img/bathroom.jpg" },
-    { title: "boots", imgPath: "./img/boots.jpg" },
-    { title: "breakfast", imgPath: "./img/breakfast.jpg" },
+    { title: "bag", imgPath: "bag.jpg" },
+    { title: "banana", imgPath: "banana.jpg" },
+    { title: "bathroom", imgPath: "bathroom.jpg" },
+    { title: "boots", imgPath: "boots.jpg" },
+    { title: "breakfast", imgPath: "breakfast.jpg" },
+    { title: "bubblegum", imgPath: "bubblegum.jpg" },
+    { title: "chair", imgPath: "chair.jpg" },
+    { title: "cthulhu", imgPath: "cthulhu.jpg" },
+    { title: "dog-duck", imgPath: "dog-duck.jpg" },
+
 
 ]
 
 function SourceDataItem(title, imgPath) {
     this.title = title
-    this.imgPath = imgPath
+    this.imgPath = `./img/${imgPath}`
     this.clickRecord = 0
     this.displayRecord = 0
+
 
 }
 
 function DataImport(sourceDataInput) {
     this.sourceDataInput = sourceDataInput  /* create a copy of data go through - then to use as a flag in loop, to create new instances*/
+    this.initialRound = 0;
 
-    this.dataPool = []
+    this.dataPool = [];
 
     this.getDataToItem = function () {
 
@@ -63,6 +70,8 @@ function DataImport(sourceDataInput) {
     this.eventListent = function () {
 
         let imgListen = document.querySelectorAll("#img-container img")
+        console.log(imgListen)
+        console.log(this.dataPool)
 
         for (let k = 0; k < imgListen.length; k++) {
             let clicked = null;
@@ -74,11 +83,13 @@ function DataImport(sourceDataInput) {
                     if (compareData.imgPath === imgListen[k].getAttribute("src")) {
                         clicked = compareData
                         clicked.clickRecord++;
-                        dataPresent.startNextRound();
+                        this.startNextRound();
+
                     }
 
                 }
 
+                console.log(clicked)
             }
             );
         }
@@ -88,10 +99,16 @@ function DataImport(sourceDataInput) {
 }
 
 DataImport.prototype.showResult = function () {
-    this.dataPool.forEach(function (dataDisplay) {
 
-        showResultdiv = document.getElementById("show-result");
-        showResultdiv.innerHTML = `
+    let showResultdiv = document.getElementById("show-result");
+    let showResultItems = '';
+
+
+
+    this.dataPool.forEach((dataDisplay) => {
+
+        showResultItems +=
+            `
         <ul>
         <li>${dataDisplay.title} had ${dataDisplay.clickRecord} had been display for ${dataDisplay.displayRecord} and </li>
         </ul>
@@ -99,7 +116,9 @@ DataImport.prototype.showResult = function () {
         `
 
 
+
     });
+    showResultdiv.innerHTML = showResultItems
 
 }
 
@@ -113,16 +132,16 @@ DataImport.prototype.endDisplayfuntion = function () {
 
 }
 
-let initialRound = 0;
-const maxRounds = 25;
 
+const maxRounds = 25;
 
 
 DataImport.prototype.startNextRound = function () {
 
-    if (initialRound < maxRounds) {
-        initialRound++;
+    if (this.initialRound < maxRounds) {
+        this.initialRound++;
         this.renderfunction();
+        this.eventListent();
     } else {
         this.endDisplayfuntion()
     }
