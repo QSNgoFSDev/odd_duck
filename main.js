@@ -52,41 +52,42 @@ function ODDduckVoting(sourceDataInput) {
         console.log(sourceDataInput);
     }
 
-    this.renderfunction = function () {
-        let container = document.getElementById('img-container')
-        randomImgString = ''
+    ODDduckVoting.prototype.renderfunction = function () {
+
+        let container = document.getElementById('img-container');
+        let randomImgString = '';
         let indexCheck = [];
-        let previousImgRender = [];
+        let imgRenderCheck = [];
 
-
-
-        // 3 times random
         for (let i = 0; i < this.numberOfTimesRandom; i++) {
-
             let randomIndex;
+            let imgRenderAtm = {};
+
             do {
                 randomIndex = Math.floor(Math.random() * this.dataPool.length);
-            } while (indexCheck.includes(randomIndex));
+            } while (indexCheck.includes(randomIndex) || imgRenderCheck.includes(function (img) {
+                img.imgPath === this.dataPool[randomIndex].imgPath;
+            }.bind(this)));
 
-            indexCheck.push(randomIndex)
+            indexCheck.push(randomIndex);
 
             let randomImg = this.dataPool[randomIndex];
-            randomImg.displayRecord++
-            randomImgString += `
-                    <div class='img-content'>
-                        <div class= 'img-content__child'>
-                            <img src="${randomImg.imgPath}" alt="${randomImg.title}">
-                        </div>
-                    <h4>${randomImg.title}</h4>
-                    <p> display ${randomImg.displayRecord} times </p>
-                    <p> have number of ${randomImg.clickRecord} vote</p>
-                    </div>
-            `;
+            randomImg.displayRecord++;
+            imgRenderAtm = randomImg;
+            imgRenderCheck.push(imgRenderAtm);
 
+            randomImgString += '<div class="img-content">' +
+                '<div class="img-content__child">' +
+                '<img src="' + randomImg.imgPath + '" alt="' + randomImg.title + '">' +
+                '</div>' +
+                '<h4>' + randomImg.title + '</h4>' +
+                '<p> display ' + randomImg.displayRecord + ' times </p>' +
+                '<p> have number of ' + randomImg.clickRecord + ' vote</p>' +
+                '</div>';
         }
-        container.innerHTML = randomImgString
 
-    }
+        container.innerHTML = randomImgString;
+    };
 
     this.eventListent = function () {
 
@@ -110,27 +111,27 @@ function ODDduckVoting(sourceDataInput) {
 
                 }
 
-                console.log(clicked)
+
             }
             );
         }
 
     };
 
-}
-
-ODDduckVoting.prototype.showResult = function () {
-
-    let showResultdiv = document.getElementById("show-result");
-
-    showResultItems = ''
 
 
+    ODDduckVoting.prototype.showResult = function () {
 
-    this.dataPool.forEach((dataDisplay) => {
+        let showResultdiv = document.getElementById("show-result");
 
-        showResultItems +=
-            `
+        showResultItems = ''
+
+
+
+        this.dataPool.forEach((dataDisplay) => {
+
+            showResultItems +=
+                `
         
        
         <p>${dataDisplay.title} has ${dataDisplay.clickRecord}vote, and was seen ${dataDisplay.displayRecord} times </p>
@@ -139,50 +140,52 @@ ODDduckVoting.prototype.showResult = function () {
 
 
 
-    });
+        });
 
 
-    showResultdiv.innerHTML = showResultItems
-
-
-
-}
-
-ODDduckVoting.prototype.endDisplay = function () {
-    let displayItem = document.getElementById("img-container")
-    displayItem.style.display = 'none';
-
-    let button = document.getElementById("result-button")
-    button.style.display = 'block'
-
-    let resultdiv = document.getElementById('show-result')
-    resultdiv.style.display = 'block'
+        showResultdiv.innerHTML = showResultItems
 
 
 
-}
-
-ODDduckVoting.prototype.buttonListener = function () {
-    let that = this
-    document.getElementById('result-button').addEventListener('click', function () {
-        that.showResult();
-    })
-}
-
-
-
-
-
-ODDduckVoting.prototype.startNextRound = function () {
-
-    if (this.initialRound < this.maxRounds) {
-        this.initialRound++;
-        this.renderfunction();
-        this.eventListent();
-    } else {
-        this.endDisplay();
-        this.buttonListener();
     }
+
+    ODDduckVoting.prototype.endDisplay = function () {
+        let displayItem = document.getElementById("img-container")
+        displayItem.style.display = 'none';
+
+        let button = document.getElementById("result-button")
+        button.style.display = 'block'
+
+        let resultdiv = document.getElementById('show-result')
+        resultdiv.style.display = 'block'
+
+
+
+    }
+
+    ODDduckVoting.prototype.buttonListener = function () {
+        let that = this
+        document.getElementById('result-button').addEventListener('click', function () {
+            that.showResult();
+        })
+    }
+
+
+
+
+
+    ODDduckVoting.prototype.startNextRound = function () {
+
+        if (this.initialRound < this.maxRounds) {
+            this.initialRound++;
+            this.renderfunction();
+            this.eventListent();
+        } else {
+            this.endDisplay();
+            this.buttonListener();
+        }
+    }
+
 }
 
 let dataPresent = new ODDduckVoting(sourceData)
@@ -190,6 +193,3 @@ dataPresent.getDataToItem()
 dataPresent.renderfunction()
 dataPresent.eventListent()
 dataPresent.buttonListener()
-
-
-// lab11 check
