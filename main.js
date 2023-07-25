@@ -8,6 +8,18 @@ let sourceData = [
     { title: "chair", imgPath: "chair.jpg" },
     { title: "cthulhu", imgPath: "cthulhu.jpg" },
     { title: "dog-duck", imgPath: "dog-duck.jpg" },
+    { title: "dragon", imgPath: "dragon.jpg" },
+    { title: "pen", imgPath: "pen.jpg" },
+    { title: "pet-sweep", imgPath: "pet-sweep.jpg" },
+    { title: "scissors", imgPath: "scissors.jpg" },
+    { title: "shark", imgPath: "shark.jpg" },
+    { title: "sweep", imgPath: "sweep.png" },
+    { title: "tauntaun", imgPath: "tauntaun.jpg" },
+    { title: "unicorn", imgPath: "unicorn.jpg" },
+    { title: "water-can", imgPath: "water-can.jpg" },
+    { title: "wine-glass", imgPath: "wine-glass.jpg" },
+
+
 
 
 ]
@@ -24,7 +36,7 @@ function SourceDataItem(title, imgPath) {
 function ODDduckVoting(sourceDataInput) {
     this.sourceDataInput = sourceDataInput  /* create a copy of data go through - then to use as a flag in loop, to create new instances*/
     this.initialRound = 0;
-    this.maxRounds = 5;
+    this.maxRounds = 25;
     this.numberOfTimesRandom = 3
 
 
@@ -44,6 +56,7 @@ function ODDduckVoting(sourceDataInput) {
         let container = document.getElementById('img-container')
         randomImgString = ''
         let indexCheck = [];
+        let previousImgRender = [];
 
 
 
