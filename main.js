@@ -29,6 +29,7 @@ function SourceDataItem(title, imgPath) {
     this.imgPath = `./img/${imgPath}`
     this.clickRecord = 0
     this.displayRecord = 0
+    
 
 
 }
@@ -38,6 +39,7 @@ function ODDduckVoting(sourceDataInput) {
     this.initialRound = 0;
     this.maxRounds = 25;
     this.numberOfTimesRandom = 3
+    this.imgRenderCheck = [];
 
 
     this.dataPool = [];
@@ -57,24 +59,33 @@ function ODDduckVoting(sourceDataInput) {
         let container = document.getElementById('img-container');
         let randomImgString = '';
         let indexCheck = [];
-        let imgRenderCheck = [];
+        let lastThreeDistinctiveItems = this.imgRenderCheck.slice(-3);
+
+
 
         for (let i = 0; i < this.numberOfTimesRandom; i++) {
             let randomIndex;
-            let imgRenderAtm = {};
+            
 
             do {
                 randomIndex = Math.floor(Math.random() * this.dataPool.length);
-            } while (indexCheck.includes(randomIndex) || imgRenderCheck.includes(function (img) {
-                img.imgPath === this.dataPool[randomIndex].imgPath;
-            }.bind(this)));
+            } while (
+                indexCheck.includes(randomIndex) ||
+                lastThreeDistinctiveItems.some(function (img) {
+                    return img.imgPath === this.dataPool[randomIndex].imgPath; // Fix: return the result of the comparison
+                }.bind(this)
+            //    this where im wrong. 
+                // imgRenderCheck.some(function (img) {
+                //     return img.imgPath === this.dataPool[randomIndex].imgPath;
+                //     }.bind(this))
+                )
+            );
 
             indexCheck.push(randomIndex);
 
             let randomImg = this.dataPool[randomIndex];
             randomImg.displayRecord++;
-            imgRenderAtm = randomImg;
-            imgRenderCheck.push(imgRenderAtm);
+            this.imgRenderCheck.push(randomImg);
 
             randomImgString += '<div class="img-content">' +
                 '<div class="img-content__child">' +
@@ -87,6 +98,7 @@ function ODDduckVoting(sourceDataInput) {
         }
 
         container.innerHTML = randomImgString;
+        
     };
 
     this.eventListent = function () {
@@ -187,7 +199,6 @@ function ODDduckVoting(sourceDataInput) {
     }
 
 }
-
 let dataPresent = new ODDduckVoting(sourceData)
 dataPresent.getDataToItem()
 dataPresent.renderfunction()
