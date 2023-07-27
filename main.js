@@ -1,3 +1,6 @@
+
+
+
 let sourceData = [
     { title: "bag", imgPath: "bag.jpg" },
     { title: "banana", imgPath: "banana.jpg" },
@@ -31,6 +34,7 @@ function SourceDataItem(title, imgPath) {
     this.displayRecord = 0
 
 
+
 }
 
 function ODDduckVoting(sourceDataInput) {
@@ -38,6 +42,7 @@ function ODDduckVoting(sourceDataInput) {
     this.initialRound = 0;
     this.maxRounds = 25;
     this.numberOfTimesRandom = 3
+    this.imgRenderCheck = [];
 
 
     this.dataPool = [];
@@ -57,24 +62,33 @@ function ODDduckVoting(sourceDataInput) {
         let container = document.getElementById('img-container');
         let randomImgString = '';
         let indexCheck = [];
-        let imgRenderCheck = [];
+        let lastThreeDistinctiveItems = this.imgRenderCheck.slice(-3);
+
+
 
         for (let i = 0; i < this.numberOfTimesRandom; i++) {
             let randomIndex;
-            let imgRenderAtm = {};
+
 
             do {
                 randomIndex = Math.floor(Math.random() * this.dataPool.length);
-            } while (indexCheck.includes(randomIndex) || imgRenderCheck.includes(function (img) {
-                img.imgPath === this.dataPool[randomIndex].imgPath;
-            }.bind(this)));
+            } while (
+                indexCheck.includes(randomIndex) ||
+                lastThreeDistinctiveItems.some(function (img) {
+                    return img.imgPath === this.dataPool[randomIndex].imgPath; // Fix: return the result of the comparison
+                }.bind(this)
+                    //    this where im wrong. 
+                    // imgRenderCheck.some(function (img) {
+                    //     return img.imgPath === this.dataPool[randomIndex].imgPath;
+                    //     }.bind(this))
+                )
+            );
 
             indexCheck.push(randomIndex);
 
             let randomImg = this.dataPool[randomIndex];
             randomImg.displayRecord++;
-            imgRenderAtm = randomImg;
-            imgRenderCheck.push(imgRenderAtm);
+            this.imgRenderCheck.push(randomImg);
 
             randomImgString += '<div class="img-content">' +
                 '<div class="img-content__child">' +
@@ -87,6 +101,7 @@ function ODDduckVoting(sourceDataInput) {
         }
 
         container.innerHTML = randomImgString;
+
     };
 
     this.eventListent = function () {
@@ -180,16 +195,89 @@ function ODDduckVoting(sourceDataInput) {
             this.initialRound++;
             this.renderfunction();
             this.eventListent();
+
         } else {
             this.endDisplay();
             this.buttonListener();
+            this.barChart();
         }
     }
 
 }
 
+ODDduckVoting.prototype.barChart = function () {
+    const ctx = document.getElementById("chart-illustration");
+    console.log(ctx);
+
+    let existingChart = Chart.getChart(ctx);
+
+    if (existingChart) {
+        existingChart.destroy();
+    }
+
+    let barChart = {
+        labels: [],
+        datasets: [
+            {
+                label: "Number of clicks",
+                data: [],
+                borderWidth: 5,
+                backgroundColor: 'pink',
+                borderColor: 'pink',
+            },
+            {
+                label: 'Number of Display',
+                data: [],
+                borderWidth: 5,
+                backgroundColor: 'black',
+                borderColor: 'black',
+            }
+        ]
+    };
+
+    for (let i = 0; i < this.dataPool.length; i++) {
+        let voteLabel = this.dataPool[i].title;
+        barChart.labels.push(voteLabel);
+        let voteClicks = this.dataPool[i].clickRecord;
+        barChart.datasets[0].data.push(voteClicks);
+        console.log(voteClicks)
+        let displayOnWeb = this.dataPool[i].displayRecord;
+        barChart.datasets[1].data.push(displayOnWeb);
+    }
+
+    let configObject = {
+        type: 'bar',
+        data: barChart,
+        options: {
+            scales: {
+                beginAtZero: true,
+                min: 0,
+                max: 20,
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Illustrated Chart'
+                }
+            }
+        }
+    };
+
+    new Chart(ctx, configObject);
+};
+
+ODDduckVoting.prototype.initChart = function () {
+    this.barChart();
+}
+
+ODDduckVoting.prototype.startVoting = function () {
+    this.getDataToItem();
+    this.initChart();
+    this.renderfunction();
+    this.eventListent();
+}
+
+
+
 let dataPresent = new ODDduckVoting(sourceData)
-dataPresent.getDataToItem()
-dataPresent.renderfunction()
-dataPresent.eventListent()
-dataPresent.buttonListener()
+dataPresent.startVoting();
